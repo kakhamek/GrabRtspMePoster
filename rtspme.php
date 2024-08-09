@@ -1,6 +1,6 @@
 <?php
 /**
- * '########::'########::'######::'########:::::::'##::::'##:'########:
+ * ########::'########::'######::'########:::::::'##::::'##:'########:
  * ##.... ##:... ##..::'##... ##: ##.... ##:::::: ###::'###: ##.....::
  * ##:::: ##:::: ##:::: ##:::..:: ##:::: ##:::::: ####'####: ##:::::::
  * ########::::: ##::::. ######:: ########::::::: ## ### ##: ######:::
@@ -11,7 +11,7 @@
  * 
  * Filename: rtspme.php
  * Author: Kakhaber Mekvabishvili
- * Date: Aug, 2024
+ * Date: August 2024
  * 
  */
 
@@ -20,12 +20,17 @@ Class RtspDotMe
 
     private $url;
 
+    /**
+     * Constructor for the class.
+     * 
+     * @param string $url
+     */
     public function __construct(string $url)
     {
         $this->url = $url;
 
         /**
-         * URL Validate
+         * Validate the URL format.
          */
         if(!preg_match('/^https?:\/\/.*/', $this->url))
         {
@@ -33,9 +38,17 @@ Class RtspDotMe
         }
     }
 
-    public function grab($savePath)
+    /**
+     * Grabs a poster image and saves it to the specified path.
+     * 
+     * @param string $savePath The path where the image will be saved.
+     * @return void
+     */
+    public function grab(string $savePath)
     {
-
+        /**
+         * Get url content
+         */
         $html = @file_get_contents($this->url);
 
         if($html === false)
@@ -44,14 +57,16 @@ Class RtspDotMe
         }
 
         /**
-         * Use DOMDocument
+         * Parses HTML content using DOMDocument.
+         * 
+         * For more information, refer to the PHP manual:
          * Mannual: https://www.php.net/manual/en/class.domdocument.php 
          */
         $doc = new DOMDocument();
         @$doc->loadHTML($html);
 
         /**
-         * Find video tag
+         * Find and retrieve the <video> tag.
          */
         $videoTags = $doc->getElementsByTagName('video');
         $poster = null;
@@ -59,7 +74,7 @@ Class RtspDotMe
         if($videoTags->length > 0)
         {
             /**
-             * Find poster attribute in video tag
+             * Retrieve the 'poster' attribute from <video> tag.
              */
             $poster = $videoTags->item(0)->getAttribute('poster');
         }
@@ -67,14 +82,18 @@ Class RtspDotMe
         if($poster)
         {
             /**
-             * Get image
+             * Retrieve the image content from the 'poster' URL.
+             * 
+             * Example URL: "https://frn.rtsp.me/vY34hUswMz1E8JAPpJq20Q/1723217386/poster/rthDG7af.jpg"
              */
             $imageContent = @file_get_contents($poster);
 
             if($imageContent !== false)
             {
                 /**
-                 * Save image
+                 * Save the image content to the specified path.
+                 * 
+                 *  $savePath example: "/home/kakha/public_html/images/camera_poster.jpg"
                  */
                 file_put_contents($savePath, $imageContent);
             }
