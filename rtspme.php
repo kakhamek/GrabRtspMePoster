@@ -41,7 +41,7 @@ Class RtspDotMe
         }
 
         $html = @file_get_contents($this->url);
-return $html;
+
         if($html === false)
         {
             throw new RuntimeException("Failed to retrieve content from URL: $this->url");
