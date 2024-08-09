@@ -23,14 +23,6 @@ Class RtspDotMe
     public function __construct(string $url)
     {
         $this->url = $url;
-    }
-
-    public function grab($savePath)
-    {
-        if(!isset($this->url))
-        {  
-            throw new InvalidArgumentException("Invalid camera URL: $this->url");
-        }
 
         /**
          * URL Validate
@@ -39,6 +31,10 @@ Class RtspDotMe
         {
             throw new InvalidArgumentException("Invalid URL for camera ID: $this->url");
         }
+    }
+
+    public function grab($savePath)
+    {
 
         $html = @file_get_contents($this->url);
 
@@ -70,6 +66,9 @@ Class RtspDotMe
 
         if($poster)
         {
+            /**
+             * Get image
+             */
             $imageContent = @file_get_contents($poster);
 
             if($imageContent !== false)
